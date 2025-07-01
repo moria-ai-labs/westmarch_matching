@@ -17,28 +17,32 @@ This will install the package along with `rapidfuzz`, which is used by the recom
 
 ## Usage
 
-WordMatcher provides two functions for finding closest matches:
+WordMatcher provides functions for finding closest matches, with different performance characteristics:
 
-1.  `find_closest_matches_rapidfuzz(target_list, choice_list, score_cutoff=60.0)`:
-    *   **Recommended for most uses due to significantly better performance.**
-    *   Uses the `rapidfuzz` library.
-    *   `score_cutoff` is on a 0-100 scale (default 60 is similar to `difflib`'s 0.6).
-    *   Includes an "exact match first" optimization: if a target word is found exactly in the choice list, that match is returned immediately, skipping fuzzy matching for that word.
+1.  `find_closest_matches_rapidfuzz_len_filter(target_list, choice_list, score_cutoff=60.0, length_delta=3)`:
+    *   **Recommended for general use, especially if choice words have varied lengths.**
+    *   Uses `rapidfuzz` and includes two optimizations:
+        1.  Exact match first: Skips fuzzy matching if an exact match is found.
+        2.  Length filtering: Narrows down choices to those with lengths similar to the target word (target_length +/- `length_delta`) before fuzzy matching.
+    *   `score_cutoff` is 0-100 (default 60). `length_delta` (default 3) controls the length window.
 
-2.  `find_closest_matches(target_list, choice_list)`:
-    *   Uses Python's built-in `difflib`.
-    *   Slower, but has no external C dependencies beyond what `pip` might pull for `rapidfuzz` if installed.
-    *   Also includes the "exact match first" optimization.
+2.  `find_closest_matches_rapidfuzz(target_list, choice_list, score_cutoff=60.0)`:
+    *   Uses `rapidfuzz` and the "exact match first" optimization.
+    *   Faster than `difflib`, and may be marginally faster than `_len_filter` version if choice word lengths are already very uniform and close to target lengths.
 
-**Example using `rapidfuzz` (recommended):**
+3.  `find_closest_matches(target_list, choice_list)`:
+    *   Uses Python's built-in `difflib` and the "exact match first" optimization.
+    *   Slowest, but has no external C dependencies (beyond those `rapidfuzz` might bring if also used).
+
+**Example using `rapidfuzz_len_filter` (recommended):**
 ```python
-from wordmatcher import find_closest_matches_rapidfuzz
+from wordmatcher import find_closest_matches_rapidfuzz_len_filter
 
 target_words = ["apple", "banan", "grappe"]
-choice_words = ["apricot", "banana", "grape", "orange", "pear"]
+choice_words = ["apricot", "banana", "grape", "orange", "pear", "longchoiceexample"]
 
-# Using a cutoff of 60 (similar to difflib's 0.6)
-matches = find_closest_matches_rapidfuzz(target_words, choice_words, score_cutoff=60)
+# Using default cutoff 60 and length_delta 3
+matches = find_closest_matches_rapidfuzz_len_filter(target_words, choice_words)
 print(matches)
 # Expected output (rapidfuzz with WRatio might give different results than difflib, e.g.):
 # {'apple': 'apricot', 'banan': 'banana', 'grappe': 'grape'}
