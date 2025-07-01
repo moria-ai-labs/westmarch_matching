@@ -61,6 +61,89 @@ print(matches)
 
 For detailed performance analysis and benchmarks, please see [PERFORMANCE.md](PERFORMANCE.md).
 
+## Performance Visualization
+
+To visually compare the performance of the `difflib` and `rapidfuzz` based matchers (with the "exact match first" optimization applied), especially how they scale with the product of target and choice list sizes (N*M), you can generate a plot. The following plot shows performance when 10% of target words have an exact match in the choice list, with an average word length of 7.
+
+**(You can generate `wordmatcher_performance_10perc_exact.png` by running the script below. If you place it in an `assets` subfolder in the repository, you can display it here using: `![Performance Plot](assets/wordmatcher_performance_10perc_exact.png)`)**
+
+<details>
+<summary>Click to view Python script for generating the performance plot</summary>
+
+```python
+# wordmatcher/benchmarks/plot_performance_graph.py
+import matplotlib.pyplot as plt
+import numpy as np
+
+def generate_performance_plot():
+    """
+    Generates a plot comparing performance of difflib and rapidfuzz
+    with 10% exact matches.
+    """
+    # Averaged Data for Plot (10% Exact Matches, Avg Word Len = 7)
+    # N*M values (product of target list size and choice list size)
+    nm_values = np.array([1000, 10000, 100000, 500000])
+
+    # Average Time (s) for difflib
+    difflib_times = np.array([
+        0.002904,  # N*M = 1,000
+        0.031906,  # N*M = 10,000
+        0.277241,  # N*M = 100,000
+        1.412573   # N*M = 500,000
+    ])
+
+    # Average Time (s) for rapidfuzz
+    rapidfuzz_times = np.array([
+        0.000946,  # N*M = 1,000
+        0.009041,  # N*M = 10,000
+        0.087245,  # N*M = 100,000
+        0.422434   # N*M = 500,000
+    ])
+
+    plt.figure(figsize=(10, 6))
+
+    plt.plot(nm_values, difflib_times, marker='o', linestyle='-', label='difflib (optimized)')
+    plt.plot(nm_values, rapidfuzz_times, marker='s', linestyle='-', label='rapidfuzz (optimized)')
+
+    plt.title('Performance Comparison (10% Exact Matches, Avg Word Len 7)')
+    plt.xlabel('N*M (Product of Target List Size and Choice List Size)')
+    plt.ylabel('Average Time (s)')
+
+    plt.xscale('log')
+
+    plt.xticks(nm_values, [f'{val:,}' for val in nm_values])
+    plt.minorticks_off()
+
+    plt.legend()
+    plt.grid(True, which="both", ls="--", alpha=0.7)
+    plt.tight_layout()
+
+    output_filename = "wordmatcher_performance_10perc_exact.png"
+    # To run this script, ensure you are in the 'wordmatcher/benchmarks/' directory
+    # or adjust path for saving if running from project root.
+    # For direct execution of this snippet, save to current dir:
+    # import os
+    # if os.path.basename(os.getcwd()) == "benchmarks":
+    #     output_filename = "../assets/" + output_filename # Example: save to project_root/assets/
+    # else: # Assuming script is run from project root where README is
+    #     if not os.path.exists("assets"): os.makedirs("assets")
+    #     output_filename = "assets/" + output_filename
+
+    plt.savefig(output_filename) # Saves to current directory of script if not path specified
+    print(f"Plot saved as {output_filename}")
+
+if __name__ == "__main__":
+    try:
+        import matplotlib
+    except ImportError:
+        print("Matplotlib is not installed. Please install it to generate the plot:")
+        print("  pip install matplotlib")
+        exit()
+
+    generate_performance_plot()
+```
+</details>
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.
