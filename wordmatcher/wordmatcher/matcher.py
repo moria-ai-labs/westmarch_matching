@@ -21,7 +21,16 @@ def find_closest_matches(target_list: list[str], choice_list: list[str]) -> dict
             matches[target_word] = None
         return matches
 
+    # Convert choice_list to a set for efficient exact match lookups
+    choice_set = set(choice_list)
+
     for target_word in target_list:
+        # Step 1: Check for an exact match
+        if target_word in choice_set:
+            matches[target_word] = target_word
+            continue # Move to the next target word
+
+        # Step 2: If no exact match, proceed with fuzzy matching
         # difflib.get_close_matches returns a list of good matches.
         # We take the first one if the list is not empty, otherwise None.
         # The `n=1` argument means we want at most 1 match.
@@ -58,7 +67,16 @@ def find_closest_matches_rapidfuzz(target_list: list[str], choice_list: list[str
             matches[target_word] = None
         return matches
 
+    # Convert choice_list to a set for efficient exact match lookups
+    choice_set = set(choice_list)
+
     for target_word in target_list:
+        # Step 1: Check for an exact match
+        if target_word in choice_set:
+            matches[target_word] = target_word
+            continue # Move to the next target word
+
+        # Step 2: If no exact match, proceed with fuzzy matching
         # process.extractOne returns a tuple (choice, score, index) or None
         # We use WRatio as it's often a good general-purpose ratio.
         # Other scorers like fuzz.ratio, fuzz.partial_ratio could also be used.

@@ -23,10 +23,12 @@ WordMatcher provides two functions for finding closest matches:
     *   **Recommended for most uses due to significantly better performance.**
     *   Uses the `rapidfuzz` library.
     *   `score_cutoff` is on a 0-100 scale (default 60 is similar to `difflib`'s 0.6).
+    *   Includes an "exact match first" optimization: if a target word is found exactly in the choice list, that match is returned immediately, skipping fuzzy matching for that word.
 
 2.  `find_closest_matches(target_list, choice_list)`:
     *   Uses Python's built-in `difflib`.
     *   Slower, but has no external C dependencies beyond what `pip` might pull for `rapidfuzz` if installed.
+    *   Also includes the "exact match first" optimization.
 
 **Example using `rapidfuzz` (recommended):**
 ```python
