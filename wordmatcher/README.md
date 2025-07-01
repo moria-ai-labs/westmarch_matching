@@ -10,10 +10,30 @@ WordMatcher is a Python library designed to efficiently find the closest match f
 
 ## Installation
 
-```bash
-pip install wordmatcher
-```
-This will install the package along with `rapidfuzz`, which is used by the recommended high-performance matching function.
+As this package is currently under development and not yet published on PyPI, you can install it directly from a local clone of the repository.
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/yourusername/wordmatcher.git # Replace with the actual URL
+    cd wordmatcher
+    ```
+
+2.  **Install the package:**
+    You have a couple of options for installation:
+
+    *   **Standard installation:**
+        This installs the package like any other Python package.
+        ```bash
+        pip install .
+        ```
+
+    *   **Editable (development) installation:**
+        This is recommended if you plan to make changes to the code. It installs the package in a way that your changes are immediately reflected without needing to reinstall.
+        ```bash
+        pip install -e .
+        ```
+
+    Both installation methods will also install `rapidfuzz`, which is a dependency for the high-performance matching functions.
 
 ## Usage
 
