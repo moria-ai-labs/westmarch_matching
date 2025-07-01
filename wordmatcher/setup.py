@@ -5,8 +5,7 @@ setup(
     version="0.1.0",
     packages=find_packages(where="."), # Adjusted to look in the current directory
     install_requires=[
-        # Add any dependencies here, e.g.,
-        # "python-Levenshtein",
+        "rapidfuzz>=3.0.0", # Added rapidfuzz
     ],
     entry_points={
         "console_scripts": [

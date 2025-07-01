@@ -34,6 +34,47 @@ def find_closest_matches(target_list: list[str], choice_list: list[str]) -> dict
             matches[target_word] = None
     return matches
 
+
+from rapidfuzz import process, fuzz
+
+def find_closest_matches_rapidfuzz(target_list: list[str], choice_list: list[str], score_cutoff: float = 60.0) -> dict[str, str | None]:
+    """
+    Finds the closest match in choice_list for each word in target_list using RapidFuzz.
+
+    Args:
+        target_list: A list of words to find matches for.
+        choice_list: A list of words to choose from.
+        score_cutoff: A score (0-100) below which matches are considered not close enough.
+                      Defaults to 60, analogous to difflib's 0.6.
+
+    Returns:
+        A dictionary where keys are words from target_list and
+        values are their closest matches from choice_list.
+        If no suitable match is found, the value will be None.
+    """
+    matches = {}
+    if not choice_list: # If choice_list is empty, no matches can be found
+        for target_word in target_list:
+            matches[target_word] = None
+        return matches
+
+    for target_word in target_list:
+        # process.extractOne returns a tuple (choice, score, index) or None
+        # We use WRatio as it's often a good general-purpose ratio.
+        # Other scorers like fuzz.ratio, fuzz.partial_ratio could also be used.
+        result = process.extractOne(
+            target_word,
+            choice_list,
+            scorer=fuzz.WRatio, # Weighted Ratio, good for different length strings
+            score_cutoff=score_cutoff
+        )
+        if result:
+            matches[target_word] = result[0] # result[0] is the best choice string
+        else:
+            matches[target_word] = None
+    return matches
+
+
 if __name__ == '__main__':
     # Example Usage
     target_words = ["apple", "banan", "grappe", "orangg", "kiwi"]
