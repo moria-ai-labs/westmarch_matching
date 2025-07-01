@@ -1,0 +1,9 @@
+README.md
+setup.py
+tests/test_matcher.py
+wordmatcher/__init__.py
+wordmatcher/matcher.py
+wordmatcher.egg-info/PKG-INFO
+wordmatcher.egg-info/SOURCES.txt
+wordmatcher.egg-info/dependency_links.txt
+wordmatcher.egg-info/top_level.txt

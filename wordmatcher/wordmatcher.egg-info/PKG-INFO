@@ -1,0 +1,59 @@
+Metadata-Version: 2.4
+Name: wordmatcher
+Version: 0.1.0
+Summary: A Python library to find the closest match for words from a given list.
+Home-page: https_github.com_yourusername_wordmatcher
+Author: Your Name
+Author-email: your.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-python
+Dynamic: summary
+
+# WordMatcher
+
+WordMatcher is a Python library designed to efficiently find the closest match for a given set of words from a predefined list of choices. For each word in a target list, it identifies the most similar word in a choice list.
+
+## Features
+
+-   Fast and efficient matching.
+-   Easy to integrate into Python projects.
+-   Uses well-known string similarity algorithms.
+
+## Installation
+
+```bash
+pip install wordmatcher
+```
+
+## Usage
+
+```python
+from wordmatcher import find_closest_matches
+
+target_words = ["apple", "banan", "grappe"]
+choice_words = ["apricot", "banana", "grape", "orange", "pear"]
+
+matches = find_closest_matches(target_words, choice_words)
+print(matches)
+# Expected output (will depend on the matching algorithm):
+# {'apple': 'apricot', 'banan': 'banana', 'grappe': 'grape'}
+```
+
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+```
